@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MatrixFigs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f6fa;
+    color: #111;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: white;
+    border-right: 1px solid #eee;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.item:hover {
+    background: #f0f0f0;
+}
+
+.item.active {
+    background: black;
+    color: white;
+}
+
+/* Main Display */
+.main {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-display {
+    max-width: 500px;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.product-display img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.product-display h1 {
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+button {
+    background: black;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #333;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="sidebar">
+<h2>Products</h2>
+
+<div class="item active" onclick="showProduct(0)">Collector Figure</div>
+<div class="item" onclick="showProduct(1)">Limited Edition</div>
+<div class="item" onclick="showProduct(2)">Fan Favorite</div>
+<div class="item" onclick="showProduct(3)">Action Figure</div>
+
+</div>
+
+<div class="main">
+<div class="product-display" id="productDisplay">
+<img src="https://yt3.googleusercontent.com/Qe1yYuPJY-NGVfgK3n53ZfhUuZAF0fW-POyGNIOfZoUWD-XKDleBQkNX8tg2D4gpgAMiB_054Q=s900-c-k-c0x00ffffff-no-rj">
+<h1>Collector Figure</h1>
+<div class="price">$29.99</div>
+<p>High-quality collectible figure for your display shelf.</p>
+<br>
+<button>Add to Cart</button>
+</div>
+</div>
+
+</div>
+
+<script>
+const products = [
+{
+    name: "Collector Figure",
+    price: "$29.99",
+    desc: "High-quality collectible figure for your display shelf.",
+    img: "https://yt3.googleusercontent.com/Qe1yYuPJY-NGVfgK3n53ZfhUuZAF0fW-POyGNIOfZoUWD-XKDleBQkNX8tg2D4gpgAMiB_054Q=s900-c-k-c0x00ffffff-no-rj"
+},
+{
+    name: "Limited Edition",
+    price: "$39.99",
+    desc: "Exclusive limited edition model figure for collectors.",
+    img: "https://yt3.googleusercontent.com/Qe1yYuPJY-NGVfgK3n53ZfhUuZAF0fW-POyGNIOfZoUWD-XKDleBQkNX8tg2D4gpgAMiB_054Q=s900-c-k-c0x00ffffff-no-rj"
+},
+{
+    name: "Fan Favorite",
+    price: "$24.99",
+    desc: "Perfect for collectors and fans of all ages.",
+    img: "https://yt3.googleusercontent.com/Qe1yYuPJY-NGVfgK3n53ZfhUuZAF0fW-POyGNIOfZoUWD-XKDleBQkNX8tg2D4gpgAMiB_054Q=s900-c-k-c0x00ffffff-no-rj"
+},
+{
+    name: "Action Figure",
+    price: "$49.99",
+    desc: "Highly detailed action figure, perfect for display or play.",
+    img: "https://yt3.googleusercontent.com/Qe1yYuPJY-NGVfgK3n53ZfhUuZAF0fW-POyGNIOfZoUWD-XKDleBQkNX8tg2D4gpgAMiB_054Q=s900-c-k-c0x00ffffff-no-rj"
+}
+];
+
+function showProduct(index) {
+    const display = document.getElementById("productDisplay");
+    const items = document.querySelectorAll(".item");
+
+    items.forEach(item => item.classList.remove("active"));
+    items[index].classList.add("active");
+
+    display.innerHTML = `
+        <img src="${products[index].img}">
+        <h1>${products[index].name}</h1>
+        <div class="price">${products[index].price}</div>
+        <p>${products[index].desc}</p>
+        <br>
+        <button>Add to Cart</button>
+    `;
+}
+</script>
+
+</body>
+</html>
