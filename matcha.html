@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MatrixFigs</title>
+
+  <link rel="icon" type="image/png"
+    href="https://chatgpt.com/backend-api/estuary/content?id=file_00000000bd88722fb4a3dd107636e0e1&ts=492451&p=fs&cid=1&sig=f932393a8bd83be8809b1d6db8f216c22a242910c9de0c18df604907753d8754&v=0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-1: #090611;
+      --bg-2: #160f2a;
+      --bg-3: #0e0a1c;
+      --card: rgba(255, 255, 255, 0.05);
+      --text: #ffffff;
+      --muted: #c7bfdc;
+      --accent: #a855f7;
+      --accent-2: #7c3aed;
+      --success: #22c55e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { width: 100%; overflow-x: hidden; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 15%, #2a1550 0%, transparent 45%),
+        radial-gradient(900px 600px at 90% 80%, #1f1242 0%, transparent 45%),
+        linear-gradient(120deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      background-size: 200% 200%;
+      animation: bgShift 14s ease infinite;
+      scroll-behavior: smooth;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: radial-gradient(#fff 1px, transparent 1px);
+      background-size: 3px 3px;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 14px 10px;
+      background: rgba(10, 6, 18, 0.72);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 999;
+      animation: navDrop 0.8s ease both;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 10px;
+      transition: 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: -120%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transition: 0.5s;
+    }
+
+    nav a:hover {
+      background: var(--accent);
+      color: #090611;
+      transform: translateY(-2px);
+    }
+
+    nav a:hover::after { left: 120%; }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-inner {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      animation: heroIn 1s cubic-bezier(.2, .7, .2, 1) 0.2s forwards;
+    }
+
+    .hero img {
+      width: 120px;
+      border-radius: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 15px 50px rgba(168, 85, 247, 0.4);
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 30px rgba(168, 85, 247, 0.8);
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2.1vw, 1.1rem);
+      margin-bottom: 26px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #0d0718;
+      background: linear-gradient(135deg, #c084fc, #a855f7);
+      box-shadow: 0 10px 28px rgba(168, 85, 247, 0.35);
+      transition: 0.25s ease;
+    }
+
+    .hero-cta:hover { transform: translateY(-2px) scale(1.02); }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-indicator {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #052e16;
+      background: #86efac;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .hero-back {
+      color: #f5ecff;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      color: var(--muted);
+      animation: bob 1.1s ease-in-out infinite alternate;
+    }
+
+    .section {
+      width: min(1160px, 92%);
+      margin: 0 auto 34px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 20px 0 26px;
+      text-shadow: 0 0 18px rgba(168, 85, 247, 0.7);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: 0.7s ease;
+    }
+
+    .section-title.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      transform: translateY(25px) scale(0.96);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.6s ease;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(168, 85, 247, 0.35);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 16px;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 1.12rem;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-weight: 900;
+      color: #e9d5ff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+      min-height: 40px;
+      margin-bottom: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 11px;
+      text-decoration: none;
+      font-weight: 800;
+      color: #0d0718;
+      background: linear-gradient(135deg, #c084fc, #a855f7 55%, #7c3aed);
+      transition: 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      left: -130%;
+      top: 0;
+      width: 120%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+      transition: 0.5s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.45);
+    }
+
+    .btn:hover::before { left: 130%; }
+
+    #support {
+      width: min(1160px, 92%);
+      margin: 12px auto 70px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px 16px;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.7s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    #support.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #support p { color: var(--muted); margin-top: 8px; }
+    #support a { color: #d8b4fe; text-decoration: none; }
+    #support a:hover { text-decoration: underline; }
+
+    .badge {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #052e16;
+      background: #86efac;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      nav { gap: 8px; }
+      nav a { padding: 8px 12px; font-size: 0.92rem; }
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes heroIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes bob {
+      from { transform: translate(-50%, 0); opacity: 0.65; }
+      to { transform: translate(-50%, 8px); opacity: 1; }
+    }
+
+    @keyframes navDrop {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <nav>
+    <a href="#rivals">Rivals</a>
+    <a href="#da-hood">Da Hood</a>
+    <a href="#hypershot">Hypershot</a>
+    <a href="#support">Support</a>
+    <a href="matcha.html">MATCHA</a>
+    <a href="https://discord.gg/d6dvjTGeBf" target="_blank" rel="noopener noreferrer">Discord</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <img src="https://chatgpt.com/backend-api/estuary/content?id=file_00000000bd88722fb4a3dd107636e0e1&ts=492451&p=fs&cid=1&sig=f932393a8bd83be8809b1d6db8f216c22a242910c9de0c18df604907753d8754&v=0" alt="MatrixFigs Logo" />
+      <div class="hero-indicator">MATCHA PAGE</div>
+      <h1>MATRIX FIGS</h1>
+      <p>Premium configs. Fast delivery. Clean setup.</p>
+      <div class="hero-actions">
+        <a class="hero-cta" href="https://matrixfigs.com/store" target="_blank" rel="noopener noreferrer">Visit Main Store</a>
+        <a class="hero-cta hero-back" href="index.html">Go Back</a>
+      </div>
+    </div>
+    <div class="scroll-down">Scroll Down</div>
+  </section>
+
+  <section id="rivals" class="section">
+    <h2 class="section-title">RIVALS</h2>
+    <div class="grid" id="rivalsGrid"></div>
+  </section>
+
+  <section id="da-hood" class="section">
+    <h2 class="section-title">DA HOOD</h2>
+    <div class="grid" id="daHoodGrid"></div>
+  </section>
+
+  <section id="hypershot" class="section">
+    <h2 class="section-title">HYPERSHOT</h2>
+    <div class="grid" id="hypershotGrid"></div>
+  </section>
+
+  <section id="support">
+    <h2 class="section-title show">Support</h2>
+    <p>Questions or help: <a href="mailto:support@matrixfigs.com">support@matrixfigs.com</a></p>
+    <a class="hero-cta" style="margin-top:14px;" href="https://matrixfigs.com/support" target="_blank" rel="noopener noreferrer">Open Support Center</a>
+    <div class="badge">Instant access after purchase</div>
+  </section>
+
+  <script>
+    const logoImg = "https://chatgpt.com/backend-api/estuary/content?id=file_00000000bd88722fb4a3dd107636e0e1&ts=492451&p=fs&cid=1&sig=f932393a8bd83be8809b1d6db8f216c22a242910c9de0c18df604907753d8754&v=0";
+
+    const rivalsProducts = [
+      { name: "Legit CFG", price: "$3.99", desc: "A legit config for rivals", img: logoImg, link: "https://buy.stripe.com/9B68wPfofagX6mp2SMa7C04" },
+      { name: "Blatant", price: "$2.99", desc: "A config for rivals if u want to be blatant", img: logoImg, link: "https://buy.stripe.com/3cIdR9b7Z3SzdOR0KEa7C07" },
+      { name: "Rivals Rage", price: "$2.99", desc: "Full rage", img: logoImg, link: "https://buy.stripe.com/aFaaEXa3Vbl16mp64Ya7C0a" }
+    ];
+
+    const daHoodProducts = [
+      { name: "Da Hood Legit", price: "$3.99", desc: "Legit config for da hood (stars use)", img: logoImg, link: "https://buy.stripe.com/14A7sL0tl1KraCF0KEa7C06" },
+      { name: "Da Hood Blatant", price: "$2.99", desc: "Blatant dh", img: logoImg, link: "https://buy.stripe.com/8x200j8ZR9cTcKN1OIa7C08" },
+      { name: "Da Hood Rage", price: "$2.99", desc: "Full on rage for da hood", img: logoImg, link: "https://buy.stripe.com/eVqcN55NF3Szh133WQa7C0b" }
+    ];
+
+    const hypershotProducts = [
+      { name: "HyperShot legit", price: "$3.99", desc: "Hypershot Legit", img: logoImg, link: "https://buy.stripe.com/7sYdR90tl60H2699haa7C05" },
+      { name: "HyperShot Blatant", price: "$2.99", desc: "Hypershot blatant", img: logoImg, link: "https://buy.stripe.com/7sYdR9b7ZfBhh13bpia7C09" },
+      { name: "HyperShot Rage", price: "$2.99", desc: "Rage", img: logoImg, link: "https://buy.stripe.com/aFa4gzfof88PdORgJCa7C0c" }
+    ];
+
+    function createCard(product) {
+      return `
+        <article class="card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="card-content">
+            <h3>${product.name}</h3>
+            <div class="price">${product.price}</div>
+            <p>${product.desc}</p>
+            <a href="${product.link}" class="btn" target="_blank" rel="noopener noreferrer">Purchase</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function populateGrid(gridId, products) {
+      const grid = document.getElementById(gridId);<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MatrixFigs</title>
+
+  <link rel="icon" type="image/png"
+    href="https://cdn.discordapp.com/attachments/1477118397551480955/1478958439710457958/content.png?ex=69aa4ae1&is=69a8f961&hm=453f4eb8639f7989268bb3ed73202786bafe6977d78ce3e7f5b17f97e752170b&" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-1: #090611;
+      --bg-2: #160f2a;
+      --bg-3: #0e0a1c;
+      --card: rgba(255, 255, 255, 0.05);
+      --text: #ffffff;
+      --muted: #c7bfdc;
+      --accent: #a855f7;
+      --accent-2: #7c3aed;
+      --success: #22c55e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { width: 100%; overflow-x: hidden; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 15%, #2a1550 0%, transparent 45%),
+        radial-gradient(900px 600px at 90% 80%, #1f1242 0%, transparent 45%),
+        linear-gradient(120deg, var(--bg-1), var(--bg-2), var(--bg-3));
+      background-size: 200% 200%;
+      animation: bgShift 14s ease infinite;
+      scroll-behavior: smooth;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: radial-gradient(#fff 1px, transparent 1px);
+      background-size: 3px 3px;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 14px 10px;
+      background: rgba(10, 6, 18, 0.72);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 999;
+      animation: navDrop 0.8s ease both;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 10px;
+      transition: 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: -120%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transition: 0.5s;
+    }
+
+    nav a:hover {
+      background: var(--accent);
+      color: #090611;
+      transform: translateY(-2px);
+    }
+
+    nav a:hover::after { left: 120%; }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-inner {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      animation: heroIn 1s cubic-bezier(.2, .7, .2, 1) 0.2s forwards;
+    }
+
+    .hero img {
+      width: 120px;
+      border-radius: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 15px 50px rgba(168, 85, 247, 0.4);
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 30px rgba(168, 85, 247, 0.8);
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: clamp(0.95rem, 2.1vw, 1.1rem);
+      margin-bottom: 26px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      color: #0d0718;
+      background: linear-gradient(135deg, #c084fc, #a855f7);
+      box-shadow: 0 10px 28px rgba(168, 85, 247, 0.35);
+      transition: 0.25s ease;
+    }
+
+    .hero-cta:hover { transform: translateY(-2px) scale(1.02); }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      color: var(--muted);
+      animation: bob 1.1s ease-in-out infinite alternate;
+    }
+
+    .section {
+      width: min(1160px, 92%);
+      margin: 0 auto 34px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin: 20px 0 26px;
+      text-shadow: 0 0 18px rgba(168, 85, 247, 0.7);
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: 0.7s ease;
+    }
+
+    .section-title.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      transform: translateY(25px) scale(0.96);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.6s ease;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(168, 85, 247, 0.35);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 16px;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 1.12rem;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-weight: 900;
+      color: #e9d5ff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+      min-height: 40px;
+      margin-bottom: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 11px;
+      text-decoration: none;
+      font-weight: 800;
+      color: #0d0718;
+      background: linear-gradient(135deg, #c084fc, #a855f7 55%, #7c3aed);
+      transition: 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      left: -130%;
+      top: 0;
+      width: 120%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+      transition: 0.5s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.45);
+    }
+
+    .btn:hover::before { left: 130%; }
+
+    #support {
+      width: min(1160px, 92%);
+      margin: 12px auto 70px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px 16px;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.7s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    #support.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #support p { color: var(--muted); margin-top: 8px; }
+    #support a { color: #d8b4fe; text-decoration: none; }
+    #support a:hover { text-decoration: underline; }
+
+    .badge {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #052e16;
+      background: #86efac;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      nav { gap: 8px; }
+      nav a { padding: 8px 12px; font-size: 0.92rem; }
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes heroIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes bob {
+      from { transform: translate(-50%, 0); opacity: 0.65; }
+      to { transform: translate(-50%, 8px); opacity: 1; }
+    }
+
+    @keyframes navDrop {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <nav>
+    <a href="#rivals">Rivals</a>
+    <a href="#da-hood">Da Hood</a>
+    <a href="#hypershot">Hypershot</a>
+    <a href="#support">Support</a>
+    <a href="matcha.html">MATCHA</a>
+    <a href="https://discord.gg/d6dvjTGeBf" target="_blank" rel="noopener noreferrer">Discord</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <img src="https://cdn.discordapp.com/attachments/1477118397551480955/1478958439710457958/content.png?ex=69aa4ae1&is=69a8f961&hm=453f4eb8639f7989268bb3ed73202786bafe6977d78ce3e7f5b17f97e752170b&" alt="MatrixFigs Logo" />
+      <h1>MATRIX FIGS</h1>
+      <p>Premium configs. Fast delivery. Clean setup.</p>
+      <a class="hero-cta" href="https://matrixfigs.com/store" target="_blank" rel="noopener noreferrer">Enjoy!</a>
+    </div>
+    <div class="scroll-down">Scroll Down</div>
+  </section>
+
+  <section id="rivals" class="section">
+    <h2 class="section-title">RIVALS</h2>
+    <div class="grid" id="rivalsGrid"></div>
+  </section>
+
+  <section id="da-hood" class="section">
+    <h2 class="section-title">DA HOOD</h2>
+    <div class="grid" id="daHoodGrid"></div>
+  </section>
+
+  <section id="hypershot" class="section">
+    <h2 class="section-title">HYPERSHOT</h2>
+    <div class="grid" id="hypershotGrid"></div>
+  </section>
+
+  <section id="support">
+    <h2 class="section-title show">Support</h2>
+    <p>Questions or help: <a href="mailto:support@matrixfigs.com">support@matrixfigs.com</a></p>
+    <a class="hero-cta" style="margin-top:14px;" href="https://matrixfigs.com/support" target="_blank" rel="noopener noreferrer">Open Support Center</a>
+    <div class="badge">Instant access after purchase</div>
+  </section>
+
+  <script>
+    const logoImg = "https://chatgpt.com/backend-api/estuary/content?id=file_00000000bd88722fb4a3dd107636e0e1&ts=492451&p=fs&cid=1&sig=f932393a8bd83be8809b1d6db8f216c22a242910c9de0c18df604907753d8754&v=0";
+
+    const rivalsProducts = [
+      { name: "Legit CFG", price: "$3.99", desc: "A legit config for rivals", img: logoImg, link: "https://buy.stripe.com/9B68wPfofagX6mp2SMa7C04" },
+      { name: "Blatant", price: "$2.99", desc: "A config for rivals if u want to be blatant", img: logoImg, link: "https://buy.stripe.com/3cIdR9b7Z3SzdOR0KEa7C07" },
+      { name: "Rivals Rage", price: "$2.99", desc: "Full rage", img: logoImg, link: "https://buy.stripe.com/aFaaEXa3Vbl16mp64Ya7C0a" }
+    ];
+
+    const daHoodProducts = [
+      { name: "Da Hood Legit", price: "$3.99", desc: "Legit config for da hood (stars use)", img: logoImg, link: "https://buy.stripe.com/14A7sL0tl1KraCF0KEa7C06" },
+      { name: "Da Hood Blatant", price: "$2.99", desc: "Blatant dh", img: logoImg, link: "https://buy.stripe.com/8x200j8ZR9cTcKN1OIa7C08" },
+      { name: "Da Hood Rage", price: "$2.99", desc: "Full on rage for da hood", img: logoImg, link: "https://buy.stripe.com/eVqcN55NF3Szh133WQa7C0b" }
+    ];
+
+    const hypershotProducts = [
+      { name: "HyperShot legit", price: "$3.99", desc: "Hypershot Legit", img: logoImg, link: "https://buy.stripe.com/7sYdR90tl60H2699haa7C05" },
+      { name: "HyperShot Blatant", price: "$2.99", desc: "Hypershot blatant", img: logoImg, link: "https://buy.stripe.com/7sYdR9b7ZfBhh13bpia7C09" },
+      { name: "HyperShot Rage", price: "$2.99", desc: "Rage", img: logoImg, link: "https://buy.stripe.com/aFa4gzfof88PdORgJCa7C0c" }
+    ];
+
+    function createCard(product) {
+      return `
+        <article class="card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="card-content">
+            <h3>${product.name}</h3>
+            <div class="price">${product.price}</div>
+            <p>${product.desc}</p>
+            <a href="${product.link}" class="btn" target="_blank" rel="noopener noreferrer">Purchase</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function populateGrid(gridId, products) {
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = products.map(createCard).join("");
+    }
+
+    populateGrid("rivalsGrid", rivalsProducts);
+    populateGrid("daHoodGrid", daHoodProducts);
+    populateGrid("hypershotGrid", hypershotProducts);
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("show");
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".card, .section-title, #support").forEach((el) => revealObserver.observe(el));
+
+    document.querySelectorAll(".grid").forEach((grid) => {
+      [...grid.children].forEach((card, i) => {
+        card.style.transitionDelay = `${i * 90}ms`;
+      });
+    });
+
+    window.addEventListener("load", () => window.scrollTo(0, 0));
+  </script>
+</body>
+</html>
+
+      grid.innerHTML = products.map(createCard).join("");
+    }
+
+    populateGrid("rivalsGrid", rivalsProducts);
+    populateGrid("daHoodGrid", daHoodProducts);
+    populateGrid("hypershotGrid", hypershotProducts);
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("show");
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".card, .section-title, #support").forEach((el) => revealObserver.observe(el));
+
+    document.querySelectorAll(".grid").forEach((grid) => {
+      [...grid.children].forEach((card, i) => {
+        card.style.transitionDelay = `${i * 90}ms`;
+      });
+    });
+
+    window.addEventListener("load", () => window.scrollTo(0, 0));
+  </script>
+</body>
+</html>
+
+
